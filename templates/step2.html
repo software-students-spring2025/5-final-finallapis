@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Step 2</title>
+</head>
+<body>
+    <h1>Step 2 - Fill in Detailed Consent Information</h1>
+    <form action="{{ url_for('step2') }}" method="POST">
+
+        <p>
+            <label for="sexual_content">What Sexual Content is Consented?</label><br/>
+            <textarea id="sexual_content" name="sexual_content" rows="4" cols="40"></textarea>
+        </p>
+        
+        <p>
+            <label>Will use contraception?</label><br/>
+            <input type="radio" name="contraception" value="yes">Yes<br/>
+            <input type="radio" name="contraception" value="no">No
+        </p>
+
+        <p>
+            <label>Sexually Transmitted Disease Check Required?</label><br/>
+            <input type="radio" name="std_check" value="yes">Yes<br/>
+            <input type="radio" name="std_check" value="no">No
+        </p>
+
+        <p>
+            <label>Allow Recording (Photo/Video/Audio)?</label><br/>
+            <input type="radio" name="record_allowed" value="yes">Yes<br/>
+            <input type="radio" name="record_allowed" value="no" checked>No
+        </p>
+
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>

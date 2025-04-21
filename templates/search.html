@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Agreements</title>
+</head>
+<body>
+    <h1>Search Agreements by Name</h1>
+    <form action="{{ url_for('search_agreements') }}" method="POST">
+        <label for="keyword">Name:</label>
+        <input type="text" id="keyword" name="keyword" />
+        <button type="submit">Search</button>
+    </form>
+
+    <br/>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>

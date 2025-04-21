@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Agreement</title>
+</head>
+<body>
+    <h1>{{ agreement.title }}</h1>
+    
+    <p><strong>Created at:</strong> {{ agreement.created_at }}</p>
+
+    <h2>Party1</h2>
+    <p>Name: {{ agreement.party1.name }}</p>
+    <p>ID: {{ agreement.party1.id_number }}</p>
+
+    <h2>Party2</h2>
+    <p>Name: {{ agreement.party2.name }}</p>
+    <p>ID: {{ agreement.party2.id_number }}</p>
+
+    <h2>Consent Details</h2>
+    {% if agreement.content %}
+        <p><strong>Sexual Content is Consented ONLY with:</strong> {{ agreement.content.sexual_content }}</p>
+        <p><strong>whether Use Contraception:</strong> {{ agreement.content.contraception }}</p>
+        <p><strong>whether Sexually Transmitted Disease Check Required:</strong> {{ agreement.content.std_check }}</p>
+        <p><strong>whether Recording Allowed:</strong> {{ agreement.content.record_allowed }}</p>
+    {% else %}
+        <p>No detail content available.</p>
+    {% endif %}
+
+    <h2>Signature</h2>
+    {% if agreement.signature %}
+        <img src="{{ agreement.signature }}" alt="Signature" style="border:1px solid #000;">
+    {% else %}
+        <p>No signature availables.</p>
+    {% endif %}
+
+    <p>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </p>
+</body>
+</html>
