@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results for "{{ keyword }}"</h1>
+
+    <ul>
+        {% for item in results %}
+            <li>
+                <a href="{{ url_for('view_agreement', agreement_id=item['_id']) }}">
+                    {{ item.title }}
+                </a>
+                - Party1: {{ item.party1.name }}
+                - Party2: {{ item.party2.name }}
+            </li>
+        {% else %}
+            <li>No agreements found.</li>
+        {% endfor %}
+    </ul>
+
+    <br/>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>

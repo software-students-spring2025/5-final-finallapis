@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signature</title>
+    <style>
+        #signatureCanvas {
+            border: 1px solid #000;
+            width: 300px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Final Step - Please Sign</h1>
+
+    <canvas id="signatureCanvas" width="300" height="150">
+        Not support canvas sign
+    </canvas><br/>
+
+    <form action="{{ url_for('signature_page') }}" method="POST" onsubmit="saveSignature()">
+        <input type="hidden" id="signature_data" name="signature_data" value="">
+
+        <button type="button" onclick="clearCanvas()">Clear</button>
+        <button type="submit">Submit Agreement</button>
+    </form>
+
+    <script>
+        let isDrawing = false;
+        let x = 0;
+        let y = 0;
+        const canvas = document.getElementById('signatureCanvas');
+        const pen = canvas.getContext('2d');
+
+        canvas.addEventListener('mousedown', e => {
+            x = e.offsetX;
+            y = e.offsetY;
+            isDrawing = true;
+        });
+
+        canvas.addEventListener('mousemove', e => {
+            if (isDrawing === true) {
+                drawLine(pen, x, y, e.offsetX, e.offsetY);
+                x = e.offsetX;
+                y = e.offsetY;
+            }
+        });
+
+        window.addEventListener('mouseup', e => {
+            if (isDrawing === true) {
+                drawLine(pen, x, y, e.offsetX, e.offsetY);
+                x = 0;
+                y = 0;
+                isDrawing = false;
+            }
+        });
+
+        function drawLine(pen, x1, y1, x2, y2) {
+            pen.beginPath();
+            pen.strokeStyle = 'black';
+            pen.lineWidth = 2;
+            pen.moveTo(x1, y1);
+            pen.lineTo(x2, y2);
+            pen.stroke();
+            pen.closePath();
+        }
+
+        function clearCanvas() {
+            pen.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveSignature() {
+            const dataURL = canvas.toDataURL('image/png');
+            document.getElementById('signature_data').value = dataURL;
+        }
+    </script>
+</body>
+</html>
