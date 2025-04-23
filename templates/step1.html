@@ -5,29 +5,16 @@
     <title>Step 1</title>
 </head>
 <body>
-    <h1>Step 1 - Fill in the basic information</h1>
+    <h1>Step 1 – Basic Information</h1>
     <form action="{{ url_for('step1') }}" method="POST">
         <p>
             <label for="title">Agreement Title</label><br/>
             <input type="text" id="title" name="title" required>
         </p>
         <p>
-            <label for="party1_name">Party1 Name</label><br/>
-            <input type="text" id="party1_name" name="party1_name" required>
+            <label for="party2_username">Target User’s Username</label><br/>
+            <input type="text" id="party2_username" name="party2_username" required>
         </p>
-        <p>
-            <label for="party1_id">Party1 ID</label><br/>
-            <input type="text" id="party1_id" name="party1_id">
-        </p>
-        <p>
-            <label for="party2_name">Party2 Name</label><br/>
-            <input type="text" id="party2_name" name="party2_name" required>
-        </p>
-        <p>
-            <label for="party2_id">Party2 ID</label><br/>
-            <input type="text" id="party2_id" name="party2_id">
-        </p>
-        
         <button type="submit">Next</button>
     </form>
 </body>

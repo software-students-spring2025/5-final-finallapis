@@ -5,7 +5,14 @@
     <title>home</title>
 </head>
 <body>
-    <h1>Sextual Consent Form generator</h1>
+    <h1>Sexual Consent Form Generator</h1>
+    <!-- Navigation links including logout -->
+    <p>
+        <a href="{{ url_for('step1') }}">Create New Agreement</a> |
+        <a href="{{ url_for('search_agreements') }}">Search Agreements</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </p>
+
     <ul>
         {% for item in agreements %}
             <li>
@@ -18,9 +25,5 @@
             </li>
         {% endfor %}
     </ul>
-    <p>
-        <a href="{{ url_for('step1') }}">Create New Agreement</a> | 
-        <a href="{{ url_for('search_agreements') }}">Search Agreements</a>
-    </p>
 </body>
 </html>
