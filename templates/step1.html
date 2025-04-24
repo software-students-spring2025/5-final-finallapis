@@ -9,13 +9,25 @@
     <form action="{{ url_for('step1') }}" method="POST">
         <p>
             <label for="title">Agreement Title</label><br/>
-            <input type="text" id="title" name="title" required>
-        </p>
-        <p>
-            <label for="party2_username">Target User’s Username</label><br/>
-            <input type="text" id="party2_username" name="party2_username" required>
-        </p>
-        <button type="submit">Next</button>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              required
+              value="{{ data.title or '' }}"
+            >
+          </p>
+          <p>
+            <label for="party2_username">Target Username</label><br/>
+            <input
+              type="text"
+              id="party2_username"
+              name="party2_username"
+              required
+              value="{{ data.party2.name or '' }}"
+            >
+          </p>
+          <button type="submit">Next</button>
     </form>
 </body>
 </html>

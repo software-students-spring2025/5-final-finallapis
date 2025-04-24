@@ -83,12 +83,33 @@ def logout():
 @login_required
 def home():
     me = current_user()
-    # show only agreements where I'm the target (party2)
-    my_agreements = list(agreements_coll.find({"party2.user_id": me["_id"]})
-                         .sort("created_at", -1))
-    return render_template("home.html", agreements=my_agreements)
 
-from bson import ObjectId
+    # Agreements sent by me (as party1)
+    sent = list(agreements_coll.find({
+        "party1.user_id": me["_id"]
+    }).sort("created_at", -1))
+
+    # Agreements received by me (as party2)
+    received = list(agreements_coll.find({
+        "party2.user_id": me["_id"]
+    }).sort("created_at", -1))
+
+    # Split each list by response_status
+    sent_pending  = [a for a in sent     if a.get("response_status", "pending") != "agreed"]
+    sent_agreed   = [a for a in sent     if a.get("response_status", "pending") == "agreed"]
+    recv_pending  = [a for a in received if a.get("response_status", "pending") != "agreed"]
+    recv_agreed   = [a for a in received if a.get("response_status", "pending") == "agreed"]
+
+
+    return render_template(
+      "home.html",
+      sent_pending=sent_pending,
+      sent_agreed=sent_agreed,
+      recv_pending=recv_pending,
+      recv_agreed=recv_agreed
+    )
+
+
 
 @app.route("/agreements/new/step1", methods=["GET", "POST"])
 @login_required
@@ -115,7 +136,10 @@ def step1():
             }
         }
         return redirect(url_for("step2"))
-    return render_template("step1.html")
+    data = session.get("agreement_data", {})
+    data.setdefault("title", "")
+    data.setdefault("party2", {"name": ""})
+    return render_template("step1.html", data=data)
 
 
 @app.route("/agreements/new/step2", methods=["GET", "POST"])
@@ -132,7 +156,14 @@ def step2():
         }
         session["agreement_data"] = data
         return redirect(url_for("signature_page"))
-    return render_template("step2.html")
+    data = session.get("agreement_data", {})
+    data.setdefault("content", {
+        "sexual_content": "",
+        "contraception": None,
+        "std_check": None,
+        "record_allowed": None
+    })
+    return render_template("step2.html", data=data)
 
 @app.route("/agreements/new/signature", methods=["GET", "POST"])
 @login_required
@@ -148,6 +179,10 @@ def signature_page():
         data["party1"]["user_id"] = ObjectId(data["party1"]["user_id"])
         data["party2"]["user_id"] = ObjectId(data["party2"]["user_id"])
 
+        # … after setting data["created_at"] …
+        data["response_status"] = "pending"       # initial state
+        data["response_date"]   = None
+
         inserted = agreements_coll.insert_one(data)
         flash("Agreement created!", "success")
         return redirect(url_for("view_agreement", agreement_id=str(inserted.inserted_id)))
@@ -162,7 +197,12 @@ def view_agreement(agreement_id):
     if not agr or agr["party2"]["user_id"] != me["_id"]:
         flash("You are not authorized to view that agreement.", "danger")
         return redirect(url_for("home"))
-    return render_template("view_agreement.html", agreement=agr)
+    return render_template(
+        "view_agreement.html",
+        agreement=agr,
+        me_id=str(me["_id"])
+    )
+
 
 @app.route("/agreements/search", methods=["GET", "POST"])
 @login_required
@@ -174,14 +214,76 @@ def search_agreements():
         results = agreements_coll.find({
             "party2.user_id": me["_id"],
             "$or": [
-                {"party1.username": {"$regex": keyword, "$options": "i"}},
-                {"title": {"$regex": keyword, "$options": "i"}}
+            {"party1.name": {"$regex": keyword, "$options": "i"}},
+            {"title":       {"$regex": keyword, "$options": "i"}}
             ]
         })
         return render_template("search_results.html",
                                results=list(results),
                                keyword=keyword)
     return render_template("search.html")
+
+@app.route("/agreements/<agreement_id>/respond", methods=["POST"])
+@login_required
+def respond_agreement(agreement_id):
+    from bson import ObjectId
+
+    me = current_user()
+    agr = agreements_coll.find_one({"_id": ObjectId(agreement_id)})
+    # only party2 can respond, and only if it’s still pending or rejected
+    if not agr or str(me["_id"]) != str(agr["party2"]["user_id"]):
+        flash("Not authorized.", "danger")
+        return redirect(url_for("home"))
+
+    choice = request.form["response"]      # 'agreed' or 'rejected'
+    new_status = choice  # exactly “agreed” or “rejected”
+
+    agreements_coll.update_one(
+        {"_id": ObjectId(agreement_id)},
+        {"$set": {
+            "response_status": new_status,
+            "response_date": datetime.utcnow()
+        }}
+    )
+
+    flash(
+      "You have “Agreed” to this form." if new_status=="agreed"
+      else "You have “Rejected” this form – party 1 can now edit & resend.",
+      "success"
+    )
+    return redirect(url_for("home"))
+
+@app.route("/agreements/<agreement_id>/edit", methods=["GET"])
+@login_required
+def edit_agreement(agreement_id):
+    agr = agreements_coll.find_one({"_id": ObjectId(agreement_id)})
+    me  = current_user()
+
+    # only party1 on a rejected form can edit
+    if (not agr
+        or agr["party1"]["user_id"] != me["_id"]
+        or agr["response_status"] != "rejected"):
+        flash("Not authorized to edit.", "danger")
+        return redirect(url_for("home"))
+
+    # seed the session exactly as step1/step2 expect it
+    session["agreement_data"] = {
+        "title": agr["title"],
+        "party1": {
+            "user_id": str(agr["party1"]["user_id"]),
+            "name":    agr["party1"]["name"]
+        },
+        "party2": {
+            "user_id": str(agr["party2"]["user_id"]),
+            "name":    agr["party2"]["name"]
+        },
+        "content": agr["content"]
+    }
+
+    # jump right back into the flow—start at Step 2 to edit content,
+    # or use step1 if you want them to also tweak title/target
+    return redirect(url_for("step2"))
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

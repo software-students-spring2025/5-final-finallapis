@@ -1,29 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>home</title>
+  <meta charset="UTF-8">
+  <title>Home</title>
 </head>
 <body>
-    <h1>Sexual Consent Form Generator</h1>
-    <!-- Navigation links including logout -->
-    <p>
-        <a href="{{ url_for('step1') }}">Create New Agreement</a> |
-        <a href="{{ url_for('search_agreements') }}">Search Agreements</a> |
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </p>
+  <h1>My Consent Forms</h1>
+  <p>
+    <a href="{{ url_for('step1') }}">Create New Agreement</a> |
+    <a href="{{ url_for('search_agreements') }}">Search</a> |
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </p>
 
+  {# Only show lists if there is at least one agreement #}
+  {% if sent_pending or sent_agreed or recv_pending or recv_agreed %}
+
+    <h2>Forms I’ve Created</h2>
+    <h3>Pending / Rejected</h3>
     <ul>
-        {% for item in agreements %}
-            <li>
-                <a href="{{ url_for('view_agreement', agreement_id=item['_id']) }}">
-                    {{ item.title }}
-                </a>
-                (Created at: {{ item.created_at }})  
-                - Party1: {{ item.party1.name }}  
-                - Party2: {{ item.party2.name }}
-            </li>
-        {% endfor %}
+      {% for agr in sent_pending %}
+        <li>
+          <a href="{{ url_for('view_agreement', agreement_id=agr._id) }}">
+            {{ agr.title }}
+          </a>
+          – To: {{ agr.party2.name }}
+          {% if agr.response_status=='rejected' %}
+            (Rejected – <a href="{{ url_for('edit_agreement', agreement_id=agr._id) }}">Edit & Resend</a>)
+          {% else %}
+            (Pending)
+          {% endif %}
+        </li>
+      {% endfor %}
     </ul>
+
+    <h3>Agreed</h3>
+    <ul>
+      {% for agr in sent_agreed %}
+        <li>
+          <a href="{{ url_for('view_agreement', agreement_id=agr._id) }}">
+            {{ agr.title }}
+          </a>
+          – To: {{ agr.party2.name }} – Approved on {{ agr.response_date.strftime('%Y-%m-%d') }}
+        </li>
+      {% endfor %}
+    </ul>
+    
+    <hr/>
+    
+    <h2>Forms for Me to Respond</h2>
+    <h3>Not Yet Agreed</h3>
+    <ul>
+      {% for agr in recv_pending %}
+        <li>
+          <a href="{{ url_for('view_agreement', agreement_id=agr._id) }}">
+            {{ agr.title }}
+          </a>
+          – From: {{ agr.party1.name }}
+          {% if agr.response_status=='rejected' %}
+            <strong>(You rejected earlier)</strong>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h3>Agreed</h3>
+    <ul>
+      {% for agr in recv_agreed %}
+        <li>
+          <a href="{{ url_for('view_agreement', agreement_id=agr._id) }}">
+            {{ agr.title }}
+          </a>
+          – From: {{ agr.party1.name }} – You agreed on {{ agr.response_date.strftime('%Y-%m-%d') }}
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    <p>No agreements to display yet.</p>
+  {% endif %}
 </body>
 </html>
