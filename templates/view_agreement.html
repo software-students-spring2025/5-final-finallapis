@@ -11,11 +11,9 @@
 
     <h2>Party1</h2>
     <p>Name: {{ agreement.party1.name }}</p>
-    <p>ID: {{ agreement.party1.id_number }}</p>
 
     <h2>Party2</h2>
     <p>Name: {{ agreement.party2.name }}</p>
-    <p>ID: {{ agreement.party2.id_number }}</p>
 
     <h2>Consent Details</h2>
     {% if agreement.content %}
@@ -32,6 +30,22 @@
         <img src="{{ agreement.signature }}" alt="Signature" style="border:1px solid #000;">
     {% else %}
         <p>No signature availables.</p>
+    {% endif %}
+
+    {% if me_id == agreement.party2.user_id|string %}
+        {% if agreement.response_status == 'pending' %}
+            <form action="{{ url_for('respond_agreement', agreement_id=agreement._id) }}"
+                method="POST">
+            <button name="response" value="agreed">Agree ✅</button>
+            <button name="response" value="rejected">Don’t Agree ❌</button>
+            </form>
+        {% else %}
+            <p>
+            You have
+            {% if agreement.response_status == 'agreed' %}agreed to{% else %}rejected{% endif %}
+            this form on {{ agreement.response_date.strftime('%Y-%m-%d %H:%M') }}.
+            </p>
+        {% endif %}
     {% endif %}
 
     <p>

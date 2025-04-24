@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Step 2</title>
+    <title>Step 2 - Fill in Detailed Consent Information</title>
 </head>
 <body>
     <h1>Step 2 - Fill in Detailed Consent Information</h1>
@@ -10,25 +10,31 @@
 
         <p>
             <label for="sexual_content">What Sexual Content is Consented?</label><br/>
-            <textarea id="sexual_content" name="sexual_content" rows="4" cols="40"></textarea>
+            <textarea id="sexual_content" name="sexual_content" rows="4" cols="40">{{ data.content.sexual_content or '' }}</textarea>
         </p>
         
         <p>
             <label>Will use contraception?</label><br/>
-            <input type="radio" name="contraception" value="yes">Yes<br/>
-            <input type="radio" name="contraception" value="no">No
+            <input type="radio" name="contraception" value="yes" 
+                   {% if data.content.contraception == 'yes' %}checked{% endif %}> Yes<br/>
+            <input type="radio" name="contraception" value="no"  
+                   {% if data.content.contraception == 'no' %}checked{% endif %}> No
         </p>
 
         <p>
             <label>Sexually Transmitted Disease Check Required?</label><br/>
-            <input type="radio" name="std_check" value="yes">Yes<br/>
-            <input type="radio" name="std_check" value="no">No
+            <input type="radio" name="std_check" value="yes" 
+                   {% if data.content.std_check == 'yes' %}checked{% endif %}> Yes<br/>
+            <input type="radio" name="std_check" value="no"  
+                   {% if data.content.std_check == 'no' %}checked{% endif %}> No
         </p>
 
         <p>
             <label>Allow Recording (Photo/Video/Audio)?</label><br/>
-            <input type="radio" name="record_allowed" value="yes">Yes<br/>
-            <input type="radio" name="record_allowed" value="no" checked>No
+            <input type="radio" name="record_allowed" value="yes" 
+                   {% if data.content.record_allowed == 'yes' %}checked{% endif %}> Yes<br/>
+            <input type="radio" name="record_allowed" value="no"  
+                   {% if data.content.record_allowed == 'no' or data.content.record_allowed is not defined %}checked{% endif %}> No
         </p>
 
         <button type="submit">Next</button>
