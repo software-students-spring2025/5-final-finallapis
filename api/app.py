@@ -194,9 +194,11 @@ def signature_page():
 def view_agreement(agreement_id):
     agr = agreements_coll.find_one({"_id": ObjectId(agreement_id)})
     me = current_user()
-    if not agr or agr["party2"]["user_id"] != me["_id"]:
+    
+    if not agr or (agr["party2"]["user_id"] != me["_id"] and agr["party1"]["user_id"] != me["_id"]):
         flash("You are not authorized to view that agreement.", "danger")
         return redirect(url_for("home"))
+    
     return render_template(
         "view_agreement.html",
         agreement=agr,
