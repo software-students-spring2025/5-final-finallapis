@@ -44,6 +44,11 @@ jobs:
         run: |
           docker push ziruihan/api:latest
 
+      - name: Wait for DockerHub to sync
+        run: |
+          echo "Waiting 30 seconds for DockerHub to make image public..."
+          sleep 30
+
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
