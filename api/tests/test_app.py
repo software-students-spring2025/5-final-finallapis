@@ -14,7 +14,8 @@ import pytest
 from flask import session, url_for
 from bson.objectid import ObjectId
 
-import app
+from api import app
+
 
 
 class DummyCursor:
