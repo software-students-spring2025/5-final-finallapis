@@ -52,6 +52,7 @@ jobs:
           host: ${{ secrets.DIGITALOCEAN_HOST }}
           username: ${{ secrets.DIGITALOCEAN_USER }}
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          passphrase: ''
           script: |
             cd /root
             docker pull ziruihan/api:latest
