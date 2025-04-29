@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -32,10 +32,8 @@ jobs:
       - name: Log in to DockerHub
         uses: docker/login-action@v3
         with:
-         username: ${{ secrets.DOCKERHUB_USERNAME }}
-         password: ${{ secrets.DOCKERHUB_TOKEN }}
-       
-
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker Image
         run: |
@@ -45,22 +43,14 @@ jobs:
       - name: Push Docker Image
         run: |
           docker push ziruihan/api:latest
-          
+
       - name: Install doctl
-        run: |
-          curl -sL https://github.com/digitalocean/doctl/releases/latest/download/doctl-$(uname -s)-$(uname -m).tar.gz | tar -xzv
-          sudo mv doctl /usr/local/bin
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Authenticate doctl
+      - name: Update App Platform App
         run: |
-          doctl auth init -t ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Deploy to DigitalOcean via doctl
-        run: |
-          DROPLET_ID=$(doctl compute droplet list --format ID,Name --no-header | grep "ubuntu-s-1vcpu-512mb-10gb-nyc1-01" | awk '{print $1}')
-          doctl compute ssh $DROPLET_ID --ssh-command "cd /root && docker pull ziruihan/api:latest && docker compose down && docker compose up -d"
-        env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
+          doctl apps update ${{ secrets.DO_APP_ID }} --spec api/do-app-spec.yaml
 
 
