@@ -151,7 +151,6 @@ Each subsystem has its own GitHub Actions workflow:
 ├── env.example            # Example environment variables              
 └── README.md              # Project documentation
 ```
-
 ---
 
 ## 📜 License
