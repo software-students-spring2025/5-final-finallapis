@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for category, msg in messages %}
+            <li class="flash flash-{{ category }}">{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
     <h1>{{ agreement.title }}</h1>
     
     <p><strong>Created at:</strong> {{ agreement.created_at }}</p>
@@ -19,9 +28,9 @@
     <h2>Consent Details</h2>
     {% if agreement.content %}
         <p><strong>Sexual Content is Consented ONLY with:</strong> {{ agreement.content.sexual_content }}</p>
-        <p><strong>whether Use Contraception:</strong> {{ agreement.content.contraception }}</p>
-        <p><strong>whether Sexually Transmitted Disease Check Required:</strong> {{ agreement.content.std_check }}</p>
-        <p><strong>whether Recording Allowed:</strong> {{ agreement.content.record_allowed }}</p>
+        <p><strong>Use Contraception:</strong> {{ agreement.content.contraception }}</p>
+        <p><strong>Sexually Transmitted Disease Check Required:</strong> {{ agreement.content.std_check }}</p>
+        <p><strong>Recording Allowed:</strong> {{ agreement.content.record_allowed }}</p>
     {% else %}
         <p>No detail content available.</p>
     {% endif %}

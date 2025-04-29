@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for category, msg in messages %}
+            <li class="flash flash-{{ category }}">{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
     <h1>Step 2 - Fill in Detailed Consent Information</h1>
     <form action="{{ url_for('step2') }}" method="POST">
 

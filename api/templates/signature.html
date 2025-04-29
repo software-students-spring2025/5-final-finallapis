@@ -13,6 +13,15 @@
     </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for category, msg in messages %}
+            <li class="flash flash-{{ category }}">{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
     <h1>Final Step - Please Sign</h1>
 
     <canvas id="signatureCanvas" width="300" height="150">
