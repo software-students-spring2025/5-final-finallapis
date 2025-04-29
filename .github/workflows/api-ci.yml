@@ -45,6 +45,11 @@ jobs:
       - name: Push Docker Image
         run: |
           docker push ziruihan/api:latest
+          
+      - name: Install doctl
+        run: |
+          curl -sL https://github.com/digitalocean/doctl/releases/latest/download/doctl-$(uname -s)-$(uname -m).tar.gz | tar -xzv
+          sudo mv doctl /usr/local/bin
 
       - name: Authenticate doctl
         run: |
