@@ -1,0 +1,19 @@
+name: MongoDB CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test-mongo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Verify Docker Compose works
+        run: |
+          cd mongodb
+          docker-compose up -d
+          sleep 15
+          docker-compose ps

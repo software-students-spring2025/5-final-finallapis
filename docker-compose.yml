@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 
 services:
   mongodb:
@@ -9,20 +9,18 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  web-app:
+  api:
     build:
-      context: . 
-      dockerfile: Dockerfile
-    container_name: web-app
+      context: ./api   
+      dockerfile: Dockerfile   
+    container_name: api
     depends_on:
       - mongodb
     ports:
-      - "5050:5000"
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017
-    volumes:
-      - .:/app 
-
+      - "5050:5000" 
+    env_file:
+      - .env        
+   
 volumes:
   mongo_data:
 
