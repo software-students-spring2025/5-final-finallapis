@@ -10,6 +10,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        
+      - name: Create .env file
+        run: cp .env.example .env 
       
       - name: Verify Docker Compose works
         run: |
