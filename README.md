@@ -1,183 +1,163 @@
-# Final Project
+# 📝 Consent Agreement Web App
 
-An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
-
-# Consent Agreement Web App
-
-![API CI/CD](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/api-ci.yml/badge.svg)
+[![API CI/CD](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/api-ci.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/api-ci.yml)
+[![Event Logger CI](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/event-logger.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/event-logger.yml)
 
 ---
 
-## Project Overview
+**Consent Agreement Web App** is a containerized full-stack application that enables users to create, sign, and manage digital consent agreements securely.
 
-This project is a full-stack web application that allows users to create, sign, and manage consent agreements online.
+**System Components:**
+- 🌐 **Web App (Flask API)**: Provides user registration, login, agreement creation, signature capture, and search functionality.
+- 🗄️ **MongoDB**: A NoSQL database for storing user accounts and consent agreements.
 
-The system consists of two containerized subsystems:
-
-- **Web App (Flask, Python)**: Provides the frontend and backend for user registration, authentication, agreement creation, and signature collection.
-- **MongoDB Database**: Stores user data and agreements securely.
-
-Both subsystems are containerized using Docker and integrated with CI/CD pipelines using GitHub Actions.  
-This project demonstrates database integration, container orchestration, and full software development workflows.
+The system uses Docker, Docker Compose, and GitHub Actions for automated CI/CD pipelines. MongoDB and Flask services are deployed as independent containerized subsystems.
 
 ---
 
-## Team Members
+## 🚀 How to Run the Project
 
-- [Zirui Han](https://github.com/ZiruiHan)
+### ✅ Prerequisites
 
----
-
-## Architecture
-
-- Python 3.9 (Flask API)
-- MongoDB (NoSQL database)
 - Docker & Docker Compose
-- GitHub Actions (CI/CD for both subsystems)
-
-Each subsystem is deployed and maintained independently.
-
----
-
-## Docker Images
-
-| Subsystem | DockerHub Image |
-|:---|:---|
-| Web App (API) | [DockerHub Link Placeholder] |
-| MongoDB | Official `mongo:latest` image |
-
-> **Note**: Replace "Placeholder" with your real DockerHub image link after you push your image.
-
----
-
-## How to Run Locally
-
-### Prerequisites
-
-- Docker installed
-- Docker Compose installed
 - Git installed
-- SSH access set up for GitHub (optional but recommended)
+- (Optional) SSH key configured for GitHub access
 
-### Setup Instructions
+---
 
-1. Clone the repository:
+### 🛠 Setup Instructions
+
+#### 1. Clone the repository
 
 ```bash
 git clone git@github.com:software-students-spring2025/5-final-finallapis.git
 cd 5-final-finallapis
 ```
 
-2. Create a real `.env` file from the provided example:
+#### 2. Configure environment variables
+
+Create a `.env` file in the root directory:
 
 ```bash
 cp env.example .env
 ```
 
-Edit `.env` to set any secrets.
-
-Example `.env`:
+Edit the `.env` file:
 
 ```env
-FLASK_SECRET_KEY=your_secret_key_here
+FLASK_SECRET_KEY=your_secret_here
 MONGO_URI=mongodb://mongodb:27017/consent_data
 ```
 
-3. Build and start all services:
+✅ This environment file sets up your Flask app secret and MongoDB connection.
+
+---
+
+#### 3. Start the system using Docker Compose
 
 ```bash
 docker-compose up --build
 ```
 
-4. Open your browser and navigate to:
+📍 Visit your app at [http://localhost:5050](http://localhost:5050)
 
-```
-http://localhost:5050
-```
-
-✅ You can now register, login, create agreements, and sign them!
+✅ You can now register accounts, create agreements, and sign them!
 
 ---
 
-## Running Unit Tests
+## 🧪 Running Unit Tests
 
-To run tests inside the Docker container:
+Tests are implemented using `pytest` and `pytest-cov`.
+
+Run tests inside the running container:
 
 ```bash
 docker exec -it api bash
 pytest --maxfail=3 --disable-warnings --tb=short
 ```
 
-or with coverage:
+Or with code coverage:
 
 ```bash
 pytest --cov=.
 ```
 
-✅ Minimum 80%+ coverage is achieved as required.
+✅ Minimum 80% test coverage achieved.
 
 ---
 
-## Environment Variables
+## 🧰 Developer Workflow
 
-| Variable | Description |
+- ✅ All code changes should use feature branches.
+- ✅ Unit tests with 80%+ coverage for each subsystem.
+- ✅ CI pipelines run tests, build Docker images, and deploy on each push or PR to main.
+- ✅ Docker images are built and pushed to DockerHub.
+
+---
+
+## 🐳 Docker Images
+
+| Subsystem | DockerHub Image |
 |:---|:---|
-| `FLASK_SECRET_KEY` | Secret key for session management |
-| `MONGO_URI` | MongoDB connection URI |
+| Web App (Flask API) | [DockerHub Link Placeholder] |
+| MongoDB | Official `mongo:latest` |
 
-> You must create a `.env` file based on `env.example` before running locally.
-
----
-
-## Example of `env.example`
-
-```env
-FLASK_SECRET_KEY=changeme123
-MONGO_URI=mongodb://mongodb:27017/consent_data
-```
-
-✅ Never commit real secrets to GitHub.  
-✅ `.env` is listed in `.gitignore`.
+> Replace the placeholder link with your actual DockerHub repository link after uploading images.
 
 ---
 
-## Deployment
+## 📦 CI/CD Pipelines
 
-The API and MongoDB containers are ready to deploy on DigitalOcean or any cloud provider using Docker Compose.
+Each subsystem has its own GitHub Actions workflow:
 
-GitHub Actions automatically:
-
-- Build Docker images
-- Run unit tests
-- Push images to DockerHub
-- Prepare for deployment
-
-CI/CD is triggered by any push or pull request to `main` or `master`.
-
----
-
-## CI/CD Workflows
-
-Two GitHub Actions workflows are configured:
-
-| Subsystem | CI/CD Workflow |
+| Subsystem | Workflow |
 |:---|:---|
 | API | [.github/workflows/api-ci.yml](.github/workflows/api-ci.yml) |
 | Event Logger | [.github/workflows/event-logger.yml](.github/workflows/event-logger.yml) |
 
-✅ Separate workflows for each subsystem  
-✅ Badges displayed at top of README
+✅ Workflows automatically:
+
+- Run unit tests
+- Build Docker images
+- Push to DockerHub
+- Prepare for deployment to DigitalOcean
 
 ---
 
-## 📋 Important Notes
+## 👥 Team Members
 
-- If you update the `.env` file, restart your containers (`docker-compose down && docker-compose up --build`).
-- Always run tests inside the container, not your local machine directly.
-- MongoDB service name must match `mongodb` inside Docker Compose networking.
+| Name           | GitHub Profile                                     |
+|----------------|----------------------------------------------------|
+| **Yang Hu**    | [@younghu312](https://github.com/younghu312)       |
+| **Ziqi Huang** | [@RyanH0417](https://github.com/RyanH0417)         |
+| **Zirui Han**  | [@ZiruiHan](https://github.com/ZiruiHan)           |
+| **Zichao Jin** | [@ZichaoJin](https://github.com/ZichaoJin)         |
 
 ---
 
-# 🚀 Thanks for checking out our project!
+## 🗂️ Project Structure
 
-This project demonstrates full software engineering workflows, from containerization and database integration to CI/CD pipelines and automated deployment readiness.
+```plaintext
+5-final-finallapis/
+├── api/                  # Flask Web App
+│   ├── app.py
+│   ├── templates/
+│   └──static/
+│  
+├── .github/
+│   └── workflows/         # GitHub Actions workflows
+├── docker-compose.yml     # Docker Compose orchestration
+├── Dockerfile             # Dockerfile for API
+├── env.example            # Example environment variables
+├── tests/                 # Unit tests     
+└── README.md              # Project documentation
+```
+
+---
+
+## 📜 License
+
+Developed as part of NYU’s Software Engineering course, Spring 2025.  
+Not licensed for commercial use.
+
+---
