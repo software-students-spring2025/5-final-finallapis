@@ -57,19 +57,13 @@ jobs:
         run: |
           doctl auth init -t ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Deploy to DigitalOcean via doctl
+      - name: Deploy to DigitalOcean App Platform
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Update App Platform App
         run: |
-          echo "${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}" > temp-deploy-key
-          chmod 600 temp-deploy-key
-
-          DROPLET_ID=$(doctl compute droplet list --format ID,Name --no-header | grep "ubuntu-s-1vcpu-512mb-10gb-nyc1-01" | awk '{print $1}')
-
-          doctl compute ssh $DROPLET_ID \
-            --ssh-key-path temp-deploy-key \
-            --ssh-command "cd /root && docker pull ziruihan/api:latest && docker compose down && docker compose up -d"
-            --ssh-options "-o StrictHostKeyChecking=no"
-
-        env:
-         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          doctl apps update ${{ secrets.DO_APP_ID }} --spec api/do-app-spec.yaml
 
 
