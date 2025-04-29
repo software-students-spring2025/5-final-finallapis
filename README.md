@@ -2,6 +2,8 @@
 
 [![API CI/CD](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/api-ci.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/api-ci.yml)
 [![Event Logger CI](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/event-logger.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/event-logger.yml)
+[![MongoDB CI/CD](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/mongodb-ci.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/mongodb-ci.yml)
+
 
 ---
 
