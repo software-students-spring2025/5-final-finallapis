@@ -142,14 +142,13 @@ Each subsystem has its own GitHub Actions workflow:
 ├── api/                  # Flask Web App
 │   ├── app.py
 │   ├── templates/
-│   └──static/
-│  
+│   ├── static/
+│   └── tests/            #Unit tests     
 ├── .github/
 │   └── workflows/         # GitHub Actions workflows
 ├── docker-compose.yml     # Docker Compose orchestration
 ├── Dockerfile             # Dockerfile for API
-├── env.example            # Example environment variables
-├── tests/                 # Unit tests     
+├── env.example            # Example environment variables              
 └── README.md              # Project documentation
 ```
 
