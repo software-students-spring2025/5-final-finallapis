@@ -56,7 +56,7 @@ jobs:
 
       - name: Validate Spec
         run: |
-           doctl apps spec validate --spec api/do-app-spec.yaml
+           doctl apps spec validate api/do-app-spec.yaml
 
       - name: Update App Platform App
         run: |
