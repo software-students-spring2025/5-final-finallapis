@@ -2,6 +2,7 @@ name: finallapis2
 services:
   - name: api
     image:
+      registry_type: DOCKER_HUB
       registry: docker.io
       repository: ziruihan/api
       tag: latest
@@ -15,4 +16,3 @@ services:
         value: mongodb://mongodb:27017/consent_data
     instance_size_slug: basic-xxs
     instance_count: 1
-
