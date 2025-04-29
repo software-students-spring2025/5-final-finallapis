@@ -46,16 +46,20 @@ jobs:
 
       - name: Wait for DockerHub to sync
         run: |
-          echo "Waiting 30 seconds for DockerHub to make image public..."
+          echo "Waiting 30 seconds for DockerHub to sync image..."
           sleep 30
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Validate Spec
+        run: |
+           doctl apps spec validate --spec api/do-app-spec.yaml
 
       - name: Update App Platform App
         run: |
-          doctl apps update ${{ secrets.DO_APP_ID }} --spec api/do-app-spec.yaml
+            doctl apps update ${{ secrets.DO_APP_ID }} --spec api/do-app-spec.yaml
 
 
