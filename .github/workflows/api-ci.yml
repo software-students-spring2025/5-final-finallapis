@@ -48,22 +48,19 @@ jobs:
           
       - name: Install doctl
         run: |
-          curl -sL https://github.com/digitalocean/doctl/releases/download/v1.103.0/doctl-1.103.0-linux-amd64.tar.gz -o doctl.tar.gz
-          tar -xzf doctl.tar.gz
+          curl -sL https://github.com/digitalocean/doctl/releases/latest/download/doctl-$(uname -s)-$(uname -m).tar.gz | tar -xzv
           sudo mv doctl /usr/local/bin
-
 
       - name: Authenticate doctl
         run: |
           doctl auth init -t ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Deploy to DigitalOcean App Platform
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Update App Platform App
+      - name: Deploy to DigitalOcean via doctl
         run: |
-          doctl apps update ${{ secrets.DO_APP_ID }} --spec api/do-app-spec.yaml
+          DROPLET_ID=$(doctl compute droplet list --format ID,Name --no-header | grep "ubuntu-s-1vcpu-512mb-10gb-nyc1-01" | awk '{print $1}')
+          doctl compute ssh $DROPLET_ID --ssh-command "cd /root && docker pull ziruihan/api:latest && docker compose down && docker compose up -d"
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
 
 
