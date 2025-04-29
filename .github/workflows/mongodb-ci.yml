@@ -13,7 +13,6 @@ jobs:
       
       - name: Verify Docker Compose works
         run: |
-          cd mongodb
           docker-compose up -d
           sleep 15
           docker-compose ps
