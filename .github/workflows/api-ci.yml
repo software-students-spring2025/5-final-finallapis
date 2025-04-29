@@ -46,16 +46,14 @@ jobs:
         run: |
           docker push ziruihan/api:latest
 
-      - name: Deploy to DigitalOcean
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.DIGITALOCEAN_HOST }}
-          username: ${{ secrets.DIGITALOCEAN_USER }}
-          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          passphrase: ''
-          script: |
-            cd /root
-            docker pull ziruihan/api:latest
-            docker compose down
-            docker compose up -d
+      - name: Authenticate doctl
+        run: |
+          doctl auth init -t ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Deploy to DigitalOcean via doctl
+        run: |
+          DROPLET_ID=$(doctl compute droplet list --format ID,Name --no-header | grep "ubuntu-s-1vcpu-512mb-10gb-nyc1-01" | awk '{print $1}')
+          doctl compute ssh $DROPLET_ID --ssh-command "cd /root && docker pull ziruihan/api:latest && docker compose down && docker compose up -d"
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
