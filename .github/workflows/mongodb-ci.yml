@@ -13,6 +13,6 @@ jobs:
       
       - name: Verify Docker Compose works
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 15
-          docker-compose ps
+          docker compose ps
