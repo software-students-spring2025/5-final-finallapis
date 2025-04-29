@@ -2,6 +2,8 @@
 
 [![API CI/CD](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/api-ci.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/api-ci.yml)
 [![Event Logger CI](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/event-logger.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/event-logger.yml)
+[![MongoDB CI/CD](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/mongodb-ci.yml/badge.svg)](https://github.com/software-students-spring2025/5-final-finallapis/actions/workflows/mongodb-ci.yml)
+
 
 ---
 
@@ -94,15 +96,22 @@ pytest --cov=.
 - ✅ Docker images are built and pushed to DockerHub.
 
 ---
-
 ## 🐳 Docker Images
 
 | Subsystem | DockerHub Image |
 |:---|:---|
-| Web App (Flask API) | [DockerHub Link Placeholder] |
-| MongoDB | Official `mongo:latest` |
+| Web App (Flask API) | [ziruihan/api on DockerHub](https://hub.docker.com/r/ziruihan/api) |
+| MongoDB | Official [`mongo:latest`](https://hub.docker.com/_/mongo) |
 
-> Replace the placeholder link with your actual DockerHub repository link after uploading images.
+> The Flask API image is hosted on DockerHub at [https://hub.docker.com/r/ziruihan/api](https://hub.docker.com/r/ziruihan/api).
+
+---
+
+## 🚀 Deployment on DigitalOcean
+
+The application has been deployed on a DigitalOcean droplet and is accessible at:
+
+> [http://198.199.89.178:5050/](http://198.199.89.178:5050/)
 
 ---
 
@@ -113,7 +122,7 @@ Each subsystem has its own GitHub Actions workflow:
 | Subsystem | Workflow |
 |:---|:---|
 | API | [.github/workflows/api-ci.yml](.github/workflows/api-ci.yml) |
-| Event Logger | [.github/workflows/event-logger.yml](.github/workflows/event-logger.yml) |
+| MONGODB DATABASE | [.github/workflows/mongodb-ci.yml](.github/workflows/mongodb-ci.yml) |
 
 ✅ Workflows automatically:
 
