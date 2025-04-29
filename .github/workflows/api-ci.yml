@@ -59,8 +59,15 @@ jobs:
 
       - name: Deploy to DigitalOcean via doctl
         run: |
+          echo "${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}" > temp-deploy-key
+          chmod 600 temp-deploy-key
+
           DROPLET_ID=$(doctl compute droplet list --format ID,Name --no-header | grep "ubuntu-s-1vcpu-512mb-10gb-nyc1-01" | awk '{print $1}')
-          doctl compute ssh $DROPLET_ID --ssh-command "cd /root && docker pull ziruihan/api:latest && docker compose down && docker compose up -d"
+
+          doctl compute ssh $DROPLET_ID \
+            --ssh-key-path temp-deploy-key \
+            --ssh-command "cd /root && docker pull ziruihan/api:latest && docker compose down && docker compose up -d"
         env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+         DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
 
